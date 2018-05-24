@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "module": "umd",
+        "target": "es5"
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}
