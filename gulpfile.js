@@ -3,6 +3,7 @@ var exec = require('child_process').exec;
 var merge = require('merge-stream');
 var clean = require('gulp-clean');
 var sequence = require('run-sequence');
+var generateDeclaration = require('@irysius/typings-util');
 
 // setup - copies node_module dependencies for test site
 gulp.task('setup', () => {
@@ -66,15 +67,21 @@ gulp.task('declaration-clean', () => {
     return gulp.src([
         'main.d.ts',
         'check.d.ts',
-        'src/**/*.d.ts'
+        'src/**/*.d.ts',
+        'types/**/*.d.ts'
     ]).pipe(clean());
+});
+
+// declaration-generate - generates a unified declaration
+gulp.task('declaration-generate', () => {
+    return generateDeclaration('./types', '@irysius/grid-math', './index.d.ts');
 });
 
 gulp.task('build', (done) => {
     sequence('compile', 'copy', 'clean', 'node_module-copy', done);
 });
 gulp.task('build-declaration', (done) => {
-    sequence('declaration-compile', 'declaration-copy', 'declaration-clean', done);
+    sequence('declaration-compile', 'declaration-copy', 'declaration-generate', 'declaration-clean', done);
 });
 
-gulp.task('default', ['build']);
+gulp.task('default', ['build', 'build-declaration']);

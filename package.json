@@ -9,6 +9,8 @@
   "author": "Lester Sy <lestersy@hotmail.com> (https://lestersy.io)",
   "license": "MIT",
   "devDependencies": {
+    "@irysius/typings-util": "0.0.1",
+    "@irysius/utils": "^0.1.4",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
     "merge-stream": "^1.0.1",
