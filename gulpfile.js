@@ -49,8 +49,6 @@ gulp.task('node_module-copy', () => {
 // declaration-compile - generates .d.ts from the TypeScript files
 gulp.task('declaration-compile', (done) => {
     exec('node-tsc -d', (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
         done(); // continue even if there's errors.
     });
 });
@@ -85,3 +83,4 @@ gulp.task('build-declaration', (done) => {
 });
 
 gulp.task('default', ['build', 'build-declaration']);
+gulp.task('prepare', ['build', 'build-declaration']);

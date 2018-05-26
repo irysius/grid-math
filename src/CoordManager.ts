@@ -15,9 +15,6 @@ import { ICellOffset } from "./Cell";
 
 export interface IState {
     cellSize: ISize;
-    /**
-     * 
-     */
     cellOffset: ICellOffset;
     gridBounds: IScreenRect;
     position: IWorldPosition;

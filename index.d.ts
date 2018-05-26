@@ -37,9 +37,6 @@ declare module "@irysius/grid-math/CoordManager" {
     import { ICellOffset } from "@irysius/grid-math/Cell";
     export interface IState {
         cellSize: ISize;
-        /**
-         *
-         */
         cellOffset: ICellOffset;
         gridBounds: IScreenRect;
         position: IWorldPosition;
