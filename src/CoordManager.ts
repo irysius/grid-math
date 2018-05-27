@@ -1,5 +1,5 @@
 import * as Vector2 from "./Vector2";
-import { IVector2 } from "./Vector2";
+import { IVector2, isVector2 } from "./Vector2";
 import * as ScreenPosition from "./ScreenPosition";
 import { IScreenPosition } from "./ScreenPosition";
 import * as WorldPosition from "./WorldPosition";
@@ -8,10 +8,12 @@ import * as CellCoord from "./CellCoord";
 import { ICellCoord } from "./CellCoord";
 import * as GridPosition from "./GridPosition";
 import { IGridPosition } from "./GridPosition";
-import { IRect, ISize } from "./Rect";
+import { IRect, isRect } from "./Rect";
 import { IScreenRect } from "./ScreenRect";
+import * as ScreenRect from "./ScreenRect";
 import { IWorldRect } from "./WorldRect";
 import { ICellOffset } from "./Cell";
+import { ISize, isSize } from "./Size";
 
 export interface IState {
     cellSize: ISize;
@@ -39,11 +41,23 @@ export interface ICoordManager {
     getWorldTopLeft(): IWorldPosition;
 }
 
+function isState(value: any): value is IState {
+    return (value &&
+        isSize(value.cellSize) &&
+        isVector2(value.cellOffset) &&
+        isRect(value.gridBounds, ScreenRect.TYPE) &&
+        isVector2(value.position, WorldPosition.TYPE));
+}
+
 export function CoordManager(options: IOptions): ICoordManager {
     let {
         state
     } = options;
     let cache: ICache = {};
+
+    if (!isState(state)) {
+        throw new Error('CoordManager initialized with invalid state.');
+    }
 
     function getGridBounds(): ICacheRect {
         if (!cache.gridBounds) {

@@ -15,6 +15,11 @@ function checkType(a: IVector2, b: IVector2): string {
     }
 }
 
+export function create(x: number, y: number, type?: string): IVector2 {
+    let result: IVector2 = { x, y };
+    if (type != null) { result.type = type; }
+    return result;
+}
 export function zero(type?: string): IVector2 {
     let result: IVector2 = { x: 0, y: 0 };
     if (type != null) { result.type = type; }
@@ -25,11 +30,12 @@ export function unit(type?: string): IVector2 {
     if (type != null) { result.type = type; }
     return result;
 }
-export function isVector(v: IVector2): boolean {
-    return (v &&
+export function isVector2(v: any, typeToCheck?: string|any): v is IVector2 {
+    return !!(v &&
         typeof v.x === 'number' &&
         typeof v.y === 'number') &&
-        (v.type == null || typeof v.type === 'string');
+        (v.type == null || typeof v.type === 'string') &&
+        (typeof typeToCheck !== 'string' || v.type === typeToCheck);
 }
 export function add<T extends IVector2>(a: T, b: T): T {
     let type = checkType(a, b);

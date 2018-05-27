@@ -66,6 +66,7 @@ gulp.task('declaration-clean', () => {
         'main.d.ts',
         'check.d.ts',
         'src/**/*.d.ts',
+        'tests/**/*.d.ts',
         'types/**/*.d.ts'
     ]).pipe(clean());
 });

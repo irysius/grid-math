@@ -1,12 +1,14 @@
+import { ISize } from "./Size";
 export interface IRect extends ISize {
     x: number; y: number;
     type?: string;
 }
-export interface ISize {
-    width: number;
-    height: number;
-}
 
+export function create(x: number, y: number, width: number, height: number, type?: string): IRect {
+    let result: IRect = { x, y, width, height };
+    if (type != null) { result.type = type; }
+    return result;
+}
 export function empty(type?: string): IRect {
     let result: IRect = { x: 0, y: 0, width: 0, height: 0 };
     if (type != null) { result.type = type; }
@@ -18,13 +20,14 @@ export function fromClientBounds(v): IRect {
         width: v.width, height: v.height
     };
 }
-export function isRect(v: IRect): boolean {
+export function isRect(v: any, typeToCheck?: string|any): v is IRect {
     return (v && 
         typeof v.x === 'number' &&
         typeof v.y === 'number' && 
         typeof v.width === 'number' &&
         typeof v.height === 'number') &&
-        (v.type == null || typeof v.type === 'string');
+        (v.type == null || typeof v.type === 'string') &&
+        (typeof typeToCheck !== 'string' || v.type === typeToCheck);
 }
 export function areEqual(a: IRect, b: IRect, ignoreType?: boolean): boolean {
     return (ignoreType || a.type === b.type) && 

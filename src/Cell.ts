@@ -1,4 +1,4 @@
-import { ISize } from "./Rect";
+import { ISize } from "./Size";
 
 export interface ICellOffset {
     x: number; y: number;

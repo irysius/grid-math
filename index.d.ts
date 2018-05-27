@@ -1,5 +1,5 @@
 declare module "@irysius/grid-math/Cell" {
-    import { ISize } from "@irysius/grid-math/Rect";
+    import { ISize } from "@irysius/grid-math/Size";
     export interface ICellOffset {
         x: number;
         y: number;
@@ -32,9 +32,9 @@ declare module "@irysius/grid-math/CoordManager" {
     import { IScreenPosition } from "@irysius/grid-math/ScreenPosition";
     import { IWorldPosition } from "@irysius/grid-math/WorldPosition";
     import { ICellCoord } from "@irysius/grid-math/CellCoord";
-    import { ISize } from "@irysius/grid-math/Rect";
     import { IScreenRect } from "@irysius/grid-math/ScreenRect";
     import { ICellOffset } from "@irysius/grid-math/Cell";
+    import { ISize } from "@irysius/grid-math/Size";
     export interface IState {
         cellSize: ISize;
         cellOffset: ICellOffset;
@@ -83,18 +83,16 @@ declare module "@irysius/grid-math" {
     export let WorldRect: typeof _WorldRect;
 }
 declare module "@irysius/grid-math/Rect" {
+    import { ISize } from "@irysius/grid-math/Size";
     export interface IRect extends ISize {
         x: number;
         y: number;
         type?: string;
     }
-    export interface ISize {
-        width: number;
-        height: number;
-    }
+    export function create(x: number, y: number, width: number, height: number, type?: string): IRect;
     export function empty(type?: string): IRect;
     export function fromClientBounds(v: any): IRect;
-    export function isRect(v: IRect): boolean;
+    export function isRect(v: any, typeToCheck?: string | any): v is IRect;
     export function areEqual(a: IRect, b: IRect, ignoreType?: boolean): boolean;
     export function closeEnough(e: number): (a: IRect, b: IRect, ignoreType?: boolean) => boolean;
     export function clone<T extends IRect>(v: T): T;
@@ -115,15 +113,24 @@ declare module "@irysius/grid-math/ScreenRect" {
     }
     export function create(x: number, y: number, width: number, height: number): IScreenRect;
 }
+declare module "@irysius/grid-math/Size" {
+    export interface ISize {
+        width: number;
+        height: number;
+    }
+    export function create(width: number, height: number): ISize;
+    export function isSize(v: any): v is ISize;
+}
 declare module "@irysius/grid-math/Vector2" {
     export interface IVector2 {
         x: number;
         y: number;
         type?: string;
     }
+    export function create(x: number, y: number, type?: string): IVector2;
     export function zero(type?: string): IVector2;
     export function unit(type?: string): IVector2;
-    export function isVector(v: IVector2): boolean;
+    export function isVector2(v: any, typeToCheck?: string | any): v is IVector2;
     export function add<T extends IVector2>(a: T, b: T): T;
     export function subtract<T extends IVector2>(a: T, b: T): T;
     export function multiply<T extends IVector2>(v: T, k: number): T;
