@@ -51,7 +51,7 @@ describe('CoordManager', () => {
         // test only one function
         expect(cm.updateWithState).to.be.a('function');
     });
-    context.only('given a valid CoordManager', () => {
+    context('given a valid CoordManager', () => {
         let coordManager: ICoordManager;
         beforeEach(() => {
             let cellSize = { width: 10, height: 10 };
