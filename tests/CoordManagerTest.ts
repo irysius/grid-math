@@ -115,10 +115,36 @@ describe('CoordManager', () => {
             expect(toWorldPosition(v_world(-50, 50))).to.deep.equal(v_world(-50, 50));
         }); 
         it('should be able to correctly update with new state', () => {
-            // test cell dim change
-            // test resize
             // test position change
-            coordManager.updateWithState(null);
+            coordManager.updateWithState({ position: v_world(0, -25) }); // move up
+            expect(coordManager.getWorldTopLeft()).to.deep.equal(v_world(-290, -215));
+            coordManager.updateWithState({ position: v_world(0, 25) }); // move down
+            expect(coordManager.getWorldTopLeft()).to.deep.equal(v_world(-290, -165));
+
+            // test resize
+            coordManager.updateWithState({ 
+                position: v_world(0, 0), 
+                gridBounds: r_screen(10, 10, 380, 580) 
+            }); // move back & turn to portrait
+            expect(coordManager.getWorldTopLeft()).to.deep.equal(v_world(-190, -290));
+            coordManager.updateWithState({ gridBounds: r_screen(10, 10, 580, 380) }); // turn back to landscape
+
+            // test cell dim change
+            let newCellSize = { width: 20, height: 20 };
+            let newOffset = makeCellOffset(newCellSize, Gravity.NorthWest);
+            coordManager.updateWithState({ cellSize: newCellSize, cellOffset: newOffset });
+
+            // test new bounds
+            let toCellCoord = coordManager.toCellCoord;
+            expect(toCellCoord(v_world(0, 0))).to.deep.equal(v_cell(0, 0));
+            expect(toCellCoord(v_world(20, 20))).to.deep.equal(v_cell(1, 1));
+            expect(toCellCoord(v_world(-1, -1))).to.deep.equal(v_cell(-1, -1));
+            expect(toCellCoord(v_world(0, 20))).to.deep.equal(v_cell(0, 1));
+            expect(toCellCoord(v_world(20, 0))).to.deep.equal(v_cell(1, 0));
+
+            let toWorldPosition = coordManager.toWorldPosition;
+            expect(toWorldPosition(v_cell(0, 0))).to.deep.equal(v_world(0, 0));
+            expect(toWorldPosition(v_cell(-1, -1))).to.deep.equal(v_world(-20, -20));
         }); 
     });
 });
