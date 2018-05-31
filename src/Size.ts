@@ -6,7 +6,7 @@ export function create(width: number, height: number): ISize {
     return { width, height };
 }
 export function isSize(v: any): v is ISize {
-    return (v &&
+    return !!(v &&
         typeof v.width === 'number' &&
         typeof v.height === 'number');
 }

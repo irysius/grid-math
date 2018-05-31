@@ -68,6 +68,7 @@ declare module "@irysius/grid-math" {
     import * as _Rect from "@irysius/grid-math/Rect";
     import * as _ScreenPosition from "@irysius/grid-math/ScreenPosition";
     import * as _ScreenRect from "@irysius/grid-math/ScreenRect";
+    import * as _Size from "@irysius/grid-math/Size";
     import * as _Vector2 from "@irysius/grid-math/Vector2";
     import * as _WorldPosition from "@irysius/grid-math/WorldPosition";
     import * as _WorldRect from "@irysius/grid-math/WorldRect";
@@ -78,6 +79,7 @@ declare module "@irysius/grid-math" {
     export let Rect: typeof _Rect;
     export let ScreenPosition: typeof _ScreenPosition;
     export let ScreenRect: typeof _ScreenRect;
+    export let Size: typeof _Size;
     export let Vector2: typeof _Vector2;
     export let WorldPosition: typeof _WorldPosition;
     export let WorldRect: typeof _WorldRect;

@@ -21,7 +21,7 @@ export function fromClientBounds(v): IRect {
     };
 }
 export function isRect(v: any, typeToCheck?: string|any): v is IRect {
-    return (v && 
+    return !!(v && 
         typeof v.x === 'number' &&
         typeof v.y === 'number' && 
         typeof v.width === 'number' &&
