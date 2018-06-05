@@ -2,12 +2,14 @@ import { expect } from 'chai';
 import { 
     Cell,
     CoordManager as _cm, 
+    Gravity as _g,
     Vector2, WorldPosition, CellCoord, ScreenPosition,
     Rect, ScreenRect 
 } from '@irysius/grid-math';
 import { ICoordManager } from '@irysius/grid-math/CoordManager';
 let { CoordManager } = _cm;
-let { cellOffset: makeCellOffset, Gravity } = Cell;
+let { Gravity } = _g;
+let { cellOffset: makeCellOffset } = Cell;
 
 let v = Vector2.create;
 let v_world = WorldPosition.create;

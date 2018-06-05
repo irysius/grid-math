@@ -1,22 +1,10 @@
 declare module "@irysius/grid-math/Cell" {
     import { ISize } from "@irysius/grid-math/Size";
+    import Gravity from "@irysius/grid-math/Gravity";
     export interface ICellOffset {
         x: number;
         y: number;
     }
-    export enum Gravity {
-        Center = 0,
-        North = 1,
-        South = 2,
-        East = 4,
-        West = 8,
-        NorthEast = 5,
-        NorthWest = 9,
-        SouthEast = 6,
-        SouthWest = 10,
-    }
-    export function northOrSouth(gravity: Gravity): Gravity;
-    export function eastOrWest(gravity: Gravity): Gravity;
     export function cellOffset(cellSize: ISize, gravity: Gravity): ICellOffset;
 }
 declare module "@irysius/grid-math/CellCoord" {
@@ -53,6 +41,40 @@ declare module "@irysius/grid-math/CoordManager" {
     }
     export function CoordManager(options: IOptions): ICoordManager;
 }
+declare module "@irysius/grid-math/Direction" {
+    export enum Direction {
+        None = 0,
+        North = 1,
+        South = 2,
+        East = 4,
+        West = 8,
+        NorthEast = 5,
+        NorthWest = 9,
+        SouthEast = 6,
+        SouthWest = 10,
+    }
+    export function isDirection(value: Direction, targetDirection: Direction): boolean;
+    export function directionToString(value: Direction): string;
+    export default Direction;
+}
+declare module "@irysius/grid-math/Gravity" {
+    export enum Gravity {
+        Center = 0,
+        North = 1,
+        South = 2,
+        East = 4,
+        West = 8,
+        NorthEast = 5,
+        NorthWest = 9,
+        SouthEast = 6,
+        SouthWest = 10,
+    }
+    export function isGravity(value: Gravity, targetGravity: Gravity): boolean;
+    export function gravityToString(value: Gravity): string;
+    export function northOrSouth(gravity: Gravity): Gravity;
+    export function eastOrWest(gravity: Gravity): Gravity;
+    export default Gravity;
+}
 declare module "@irysius/grid-math/GridPosition" {
     import { IVector2 } from "@irysius/grid-math/Vector2";
     export interface IGridPosition extends IVector2 {
@@ -61,9 +83,14 @@ declare module "@irysius/grid-math/GridPosition" {
     export function create(x: number, y: number): IGridPosition;
 }
 declare module "@irysius/grid-math" {
+    import * as _Iterable from "@irysius/grid-math/helpers/Iterable";
+    import * as _Movement from "@irysius/grid-math/pathfinding/Movement";
+    import * as _PathGenerator from "@irysius/grid-math/pathfinding/PathGenerator";
     import * as _Cell from "@irysius/grid-math/Cell";
     import * as _CellCoord from "@irysius/grid-math/CellCoord";
     import * as _CoordManager from "@irysius/grid-math/CoordManager";
+    import * as _Direction from "@irysius/grid-math/Direction";
+    import * as _Gravity from "@irysius/grid-math/Gravity";
     import * as _GridPosition from "@irysius/grid-math/GridPosition";
     import * as _Rect from "@irysius/grid-math/Rect";
     import * as _ScreenPosition from "@irysius/grid-math/ScreenPosition";
@@ -72,9 +99,18 @@ declare module "@irysius/grid-math" {
     import * as _Vector2 from "@irysius/grid-math/Vector2";
     import * as _WorldPosition from "@irysius/grid-math/WorldPosition";
     import * as _WorldRect from "@irysius/grid-math/WorldRect";
+    export let helpers: {
+        Iterable: typeof _Iterable;
+    };
+    export let pathfinding: {
+        Movement: typeof _Movement;
+        PathGenerator: typeof _PathGenerator;
+    };
     export let Cell: typeof _Cell;
     export let CellCoord: typeof _CellCoord;
     export let CoordManager: typeof _CoordManager;
+    export let Direction: typeof _Direction;
+    export let Gravity: typeof _Gravity;
     export let GridPosition: typeof _GridPosition;
     export let Rect: typeof _Rect;
     export let ScreenPosition: typeof _ScreenPosition;
@@ -156,4 +192,47 @@ declare module "@irysius/grid-math/WorldRect" {
         type: 'world';
     }
     export function create(x: number, y: number, width: number, height: number): IWorldRect;
+}
+declare module "@irysius/grid-math/helpers/Iterable" {
+    export interface ISlidingWindowOptions {
+        prevCapacity: number;
+        nextCapacity: number;
+    }
+    export interface ISlidingWindow<T> {
+        next(): {
+            value: T;
+            done: boolean;
+        };
+        readonly prevValues: T[];
+        readonly currValue: T;
+        readonly nextValues: T[];
+        readonly done: boolean;
+    }
+    export function SlidingWindow<T>(collection: IterableIterator<T>, options: ISlidingWindowOptions): ISlidingWindow<T>;
+    export function isIterator<T = any>(value: any): value is IterableIterator<T>;
+    export function map<T, U>(mapper: (x: T) => U): (collection: IterableIterator<T>) => IterableIterator<U>;
+    export function flatten(): <T>(collection: IterableIterator<T | IterableIterator<T>>) => IterableIterator<T>;
+    export function filter<T>(filterer: (x: T) => boolean): (collection: IterableIterator<T>) => IterableIterator<T>;
+    export function zip<A, B>(collectionA: IterableIterator<A>, collectionB: IterableIterator<B>): IterableIterator<[A, B]>;
+    export type IteratorPipe = (x: IterableIterator<any>) => IterableIterator<any>;
+    export function flow<A = any, Z = any>(...pipes: IteratorPipe[]): (collection: IterableIterator<A>) => IterableIterator<Z>;
+    export function skip(count: number): <T>(collection: IterableIterator<T>) => void;
+    export function take(count: number): <T>(collection: IterableIterator<T>) => T[];
+    export function skipTake(_skip: number, _take: number): <T>(collection: IterableIterator<T>) => T[];
+    export function fromArray<T>(items: T[]): IterableIterator<T>;
+}
+declare module "@irysius/grid-math/pathfinding/Journey" {
+}
+declare module "@irysius/grid-math/pathfinding/Movement" {
+    export {};
+}
+declare module "@irysius/grid-math/pathfinding/PathGenerator" {
+    import { IVector2 } from "@irysius/grid-math/Vector2";
+    /**
+     * Returns an iterator for the steps provided.
+     * @param steps
+     * @param timesToLoop Number of times to loop through the steps. For infinite loop, set this to 0.
+     */
+    export function createPath(steps: IVector2[], timesToLoop?: number): IterableIterator<IVector2>;
+    export function test(): void;
 }

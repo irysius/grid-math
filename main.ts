@@ -8,6 +8,7 @@ import * as ScreenRect from '@irysius/grid-math/ScreenRect';
 import * as Vector2 from '@irysius/grid-math/Vector2';
 import * as WorldPosition from '@irysius/grid-math/WorldPosition';
 import * as WorldRect from '@irysius/grid-math/WorldRect';
+import * as PathGenerator from '@irysius/grid-math/pathfinding/PathGenerator';
 
 function exists(type: string, item: any) {
     if (item != null) {
@@ -27,3 +28,4 @@ exists('ScreenRect', ScreenRect);
 exists('Vector2', Vector2);
 exists('WorldPosition', WorldPosition);
 exists('WorldRect', WorldRect);
+exists('pathfinding/PathGenerator', PathGenerator);

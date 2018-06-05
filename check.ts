@@ -18,4 +18,6 @@ exists('ScreenRect', math.ScreenRect);
 exists('Vector2', math.Vector2);
 exists('WorldPosition', math.WorldPosition);
 exists('WorldRect', math.WorldRect);
+exists('pathfinding/PathGenerator', math.pathfinding.PathGenerator);
+
 
