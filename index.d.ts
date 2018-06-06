@@ -84,8 +84,8 @@ declare module "@irysius/grid-math/GridPosition" {
 }
 declare module "@irysius/grid-math" {
     import * as _Iterable from "@irysius/grid-math/helpers/Iterable";
-    import * as _Movement from "@irysius/grid-math/pathfinding/Movement";
-    import * as _PathGenerator from "@irysius/grid-math/pathfinding/PathGenerator";
+    import * as _PathExecutor from "@irysius/grid-math/pathfinding/PathExecutor";
+    import * as _tools from "@irysius/grid-math/pathfinding/tools";
     import * as _Cell from "@irysius/grid-math/Cell";
     import * as _CellCoord from "@irysius/grid-math/CellCoord";
     import * as _CoordManager from "@irysius/grid-math/CoordManager";
@@ -103,8 +103,8 @@ declare module "@irysius/grid-math" {
         Iterable: typeof _Iterable;
     };
     export let pathfinding: {
-        Movement: typeof _Movement;
-        PathGenerator: typeof _PathGenerator;
+        PathExecutor: typeof _PathExecutor;
+        tools: typeof _tools;
     };
     export let Cell: typeof _Cell;
     export let CellCoord: typeof _CellCoord;
@@ -221,18 +221,24 @@ declare module "@irysius/grid-math/helpers/Iterable" {
     export function skipTake(_skip: number, _take: number): <T>(collection: IterableIterator<T>) => T[];
     export function fromArray<T>(items: T[]): IterableIterator<T>;
 }
-declare module "@irysius/grid-math/pathfinding/Journey" {
+declare module "@irysius/grid-math/pathfinding/PathExecutor" {
+    import { IWorldPosition } from "@irysius/grid-math/WorldPosition";
+    export interface IPathExecutor {
+        update(msElapsed: number): void;
+        readonly value: IWorldPosition;
+        readonly done: boolean;
+    }
+    export function PathExecutor(path: IterableIterator<IWorldPosition>, msPerStep: number): IPathExecutor;
 }
-declare module "@irysius/grid-math/pathfinding/Movement" {
-    export {};
-}
-declare module "@irysius/grid-math/pathfinding/PathGenerator" {
+declare module "@irysius/grid-math/pathfinding/tools" {
+    import { ICellCoord } from "@irysius/grid-math/CellCoord";
     import { IVector2 } from "@irysius/grid-math/Vector2";
+    export function simpleSquare(start: ICellCoord): ICellCoord[];
     /**
      * Returns an iterator for the steps provided.
      * @param steps
      * @param timesToLoop Number of times to loop through the steps. For infinite loop, set this to 0.
      */
-    export function createPath(steps: IVector2[], timesToLoop?: number): IterableIterator<IVector2>;
+    export function createPath<T extends IVector2>(steps: T[], timesToLoop?: number): IterableIterator<T>;
     export function test(): void;
 }

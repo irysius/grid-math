@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as math from '@irysius/grid-math';
 let {
-    isIterator, 
+    isIterator, fromArray,
     map, filter, flatten, zip, flow,
     skip, take, skipTake
 } = math.helpers.Iterable;
@@ -21,7 +21,7 @@ function* letters(): IterableIterator<string> {
 
 describe('Iterable', () => {
     context('SlidingWindow', () => {
-
+        // TODO
     });
     it("should be able to determine what's an iterator", () => {
         // the only thing we check for is next()
@@ -70,6 +70,13 @@ describe('Iterable', () => {
     it('should be able to skip and take elements from an iterator', () => {
         let expected = [3, 4, 5, 6];
         expect(skipTake(2, 4)(numbers())).to.deep.equal(expected);
+    });
+
+    it('should be able to turn an array into an iterator', () => {
+        let l = fromArray(['Alpha', 'Bravo', 'Charlie', 'Delta']);
+        expect(l.next().value).to.equal('Alpha');
+        expect(l.next().value).to.equal('Bravo');
+
     });
 
     it('should have the ability to map iterators', () => {

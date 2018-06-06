@@ -4,12 +4,11 @@ export let helpers = {
     Iterable: _Iterable
 };
 
-// import * as _Journey from './pathfinding/Journey';
-import * as _Movement from './pathfinding/Movement';
-import * as _PathGenerator from './pathfinding/PathGenerator';
+import * as _PathExecutor from './pathfinding/PathExecutor';
+import * as _tools from './pathfinding/tools';
 export let pathfinding = {
-    Movement: _Movement,
-    PathGenerator: _PathGenerator
+    PathExecutor: _PathExecutor,
+    tools: _tools
 };
 
 import * as _Cell from './Cell';

@@ -3,12 +3,12 @@ import  { IVector2, add, subtract } from "../Vector2";
 import Direction, { directionToString } from "../Direction";
 import { SlidingWindow } from "../helpers/Iterable";
 
-function simpleSquare(start: ICellCoord) {
+export function simpleSquare(start: ICellCoord) {
     let steps = [
+        start,
         add(start, c(0, 1)),
         add(start, c(1, 1)),
-        add(start, c(1, 0)),
-        start
+        add(start, c(1, 0))
     ];
     return steps;
 }
@@ -43,7 +43,7 @@ type StepsGenerator = (start: ICellCoord) => Steps;
  * @param steps 
  * @param timesToLoop Number of times to loop through the steps. For infinite loop, set this to 0.
  */
-export function createPath(steps: IVector2[], timesToLoop: number = 0) {
+export function createPath<T extends IVector2>(steps: T[], timesToLoop: number = 0): IterableIterator<T> {
     function* inner() {
         let index = 0, loopCount = 0, stepCount = steps.length;
         let cond = () => {
@@ -66,7 +66,7 @@ export function createPath(steps: IVector2[], timesToLoop: number = 0) {
     return inner();
 }
 
-
+// Don't need this anymore...
 function getDirection(before: IVector2, after?: IVector2): Direction {
     if (!after) { return Direction.None; }
 
@@ -134,6 +134,4 @@ export function test() {
     console.log(sample.next());
     console.log(sample.next());
     console.log(sample.next());
-
 }
-
