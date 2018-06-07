@@ -9,15 +9,19 @@ export enum Gravity {
     SouthEast   = 0b0110,
     SouthWest   = 0b1010
 }
-export function isGravity(value: Gravity, targetGravity: Gravity): boolean {
-    return (value & targetGravity) === targetGravity;
+export function hasGravity(value: Gravity, targetGravity: Gravity): boolean {
+    if (targetGravity === Gravity.Center) {
+        return value === Gravity.Center;
+    } else {
+        return (value & targetGravity) === targetGravity;
+    }
 }
 export function gravityToString(value: Gravity): string {
     let strings = [
-        isGravity(value, Gravity.North) ? 'North' : null,
-        isGravity(value, Gravity.South) ? 'South' : null,
-        isGravity(value, Gravity.East) ? 'East' : null,
-        isGravity(value, Gravity.West) ? 'West' : null
+        hasGravity(value, Gravity.North) ? 'North' : null,
+        hasGravity(value, Gravity.South) ? 'South' : null,
+        hasGravity(value, Gravity.East) ? 'East' : null,
+        hasGravity(value, Gravity.West) ? 'West' : null
     ].filter(x => x);
     if (strings.length === 0) {
         return 'Gravity.Center';

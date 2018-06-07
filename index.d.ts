@@ -53,7 +53,7 @@ declare module "@irysius/grid-math/Direction" {
         SouthEast = 6,
         SouthWest = 10,
     }
-    export function isDirection(value: Direction, targetDirection: Direction): boolean;
+    export function hasDirection(value: Direction, targetDirection: Direction): boolean;
     export function directionToString(value: Direction): string;
     export default Direction;
 }
@@ -69,7 +69,7 @@ declare module "@irysius/grid-math/Gravity" {
         SouthEast = 6,
         SouthWest = 10,
     }
-    export function isGravity(value: Gravity, targetGravity: Gravity): boolean;
+    export function hasGravity(value: Gravity, targetGravity: Gravity): boolean;
     export function gravityToString(value: Gravity): string;
     export function northOrSouth(gravity: Gravity): Gravity;
     export function eastOrWest(gravity: Gravity): Gravity;
@@ -169,8 +169,8 @@ declare module "@irysius/grid-math/Vector2" {
     export function zero(type?: string): IVector2;
     export function unit(type?: string): IVector2;
     export function isVector2(v: any, typeToCheck?: string | any): v is IVector2;
-    export function add<T extends IVector2>(a: T, b: T): T;
-    export function subtract<T extends IVector2>(a: T, b: T): T;
+    export function add<T extends IVector2, U extends IVector2 = T>(a: T, b: U): T;
+    export function subtract<T extends IVector2, U extends IVector2 = T>(a: T, b: U): T;
     export function multiply<T extends IVector2>(v: T, k: number): T;
     export function negate<T extends IVector2>(v: T): T;
     export function areEqual(a: IVector2, b: IVector2, ignoreType?: boolean): boolean;
@@ -203,6 +203,7 @@ declare module "@irysius/grid-math/helpers/Iterable" {
             value: T;
             done: boolean;
         };
+        [Symbol.iterator](): this;
         readonly prevValues: T[];
         readonly currValue: T;
         readonly nextValues: T[];
@@ -210,9 +211,11 @@ declare module "@irysius/grid-math/helpers/Iterable" {
     }
     export function SlidingWindow<T>(collection: IterableIterator<T>, options: ISlidingWindowOptions): ISlidingWindow<T>;
     export function isIterator<T = any>(value: any): value is IterableIterator<T>;
-    export function map<T, U>(mapper: (x: T) => U): (collection: IterableIterator<T>) => IterableIterator<U>;
+    export type Mapper<T, U> = (item?: T, collection?: IterableIterator<T>) => U;
+    export function map<T, U>(mapper: Mapper<T, U>): (collection: IterableIterator<T>) => IterableIterator<U>;
     export function flatten(): <T>(collection: IterableIterator<T | IterableIterator<T>>) => IterableIterator<T>;
-    export function filter<T>(filterer: (x: T) => boolean): (collection: IterableIterator<T>) => IterableIterator<T>;
+    export type Filterer<T> = (item?: T, collection?: IterableIterator<T>) => boolean;
+    export function filter<T>(filterer: Filterer<T>): (collection: IterableIterator<T>) => IterableIterator<T>;
     export function zip<A, B>(collectionA: IterableIterator<A>, collectionB: IterableIterator<B>): IterableIterator<[A, B]>;
     export type IteratorPipe = (x: IterableIterator<any>) => IterableIterator<any>;
     export function flow<A = any, Z = any>(...pipes: IteratorPipe[]): (collection: IterableIterator<A>) => IterableIterator<Z>;

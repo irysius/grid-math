@@ -6,11 +6,13 @@ export interface ISlidingWindowOptions {
 }
 export interface ISlidingWindow<T> {
     next(): { value: T, done: boolean };
+    [Symbol.iterator](): this;
     readonly prevValues: T[];
     readonly currValue: T;
     readonly nextValues: T[];
     readonly done: boolean;
 }
+
 export function SlidingWindow<T>(collection: IterableIterator<T>, options: ISlidingWindowOptions): ISlidingWindow<T> {
     let {
         prevCapacity, nextCapacity
@@ -20,6 +22,14 @@ export function SlidingWindow<T>(collection: IterableIterator<T>, options: ISlid
     let nextValues: T[] = [];
     let started = false;
     let done = false;
+    validate();
+
+    function validate() {
+        // if prev and next capacities are not 0/positive numbers
+        if (!(prevCapacity >= 0 && nextCapacity >= 0)) {
+            throw new Error('SlidingWindow requires zero or positive (prev/next)Capacities');
+        }
+    }
 
     function initialNext() {
         started = true;
@@ -45,18 +55,34 @@ export function SlidingWindow<T>(collection: IterableIterator<T>, options: ISlid
         // expel if prevValues array is too long
         if (prevValues.length > prevCapacity) { prevValues.splice(0, 1); }
 
-        let _next = nextValues.splice(0, 1);
-        if (_next.length === 1) {
-            currValue = _next[0];
-        } else {
-            currValue = undefined;
-            done = true;
-            return true;
-        }
-        
         let next = collection.next();
-        // if there are no more values
-        if (!next.done) { nextValues.push(next.value); }
+
+        if (nextCapacity > 0) {
+            // If we need to set the currValue based on nextValues
+            let _next = nextValues.splice(0, 1);
+            if (_next.length === 1) {
+                currValue = _next[0];
+            } else {
+                currValue = undefined;
+                done = true;
+                return true;
+            }
+
+            // if there are no more values
+            if (!next.done) {
+                nextValues.push(next.value);
+            }
+        } else {
+            // If nextCapacity is 0, and we don't need to set currValue based on nextValues
+            if (!next.done) {
+                currValue = next.value;
+            } else {
+                currValue = undefined;
+                done = true;
+                return true;
+            }
+        }
+
         return false;
     }
     function next(): { value: T, done: boolean } {
@@ -86,10 +112,10 @@ export function SlidingWindow<T>(collection: IterableIterator<T>, options: ISlid
         get: () => currValue, enumerable: true
     });
     Object.defineProperty(proxy, 'prevValues', {
-        get: () => prevValues, enumerable: true
+        get: () => prevValues.slice(), enumerable: true
     });
     Object.defineProperty(proxy, 'nextValues', {
-        get: () => nextValues, enumerable: true
+        get: () => nextValues.slice(), enumerable: true
     });
     Object.defineProperty(proxy, 'done', {
         get: () => done, enumerable: true
@@ -103,13 +129,14 @@ export function isIterator<T = any>(value): value is IterableIterator<T> {
 }
 
 // Turn the function into functional friendly form.
-export function map<T, U>(mapper: (x: T) => U) {
+export type Mapper<T, U> = (item?: T, collection?: IterableIterator<T>) => U;
+export function map<T, U>(mapper: Mapper<T, U>) {
     return function (collection: IterableIterator<T>): IterableIterator<U> {
         let mapped = function* () {
             let { value, done } = collection.next();
     
             while (!done) {
-                yield mapper(value);
+                yield mapper(value, collection);
                 let next = collection.next();
                 value = next.value;
                 done = next.done;
@@ -137,13 +164,14 @@ export function flatten() {
         return flattened();
     };
 }
-export function filter<T>(filterer: (x: T) => boolean) {
+export type Filterer<T> = (item?: T, collection?: IterableIterator<T>) => boolean;
+export function filter<T>(filterer: Filterer<T>) {
     return function (collection: IterableIterator<T>): IterableIterator<T> {
         let filtered = function* () {
             let { value, done } = collection.next();
 
             while (!done) {
-                if (filterer(value)) {
+                if (filterer(value, collection)) {
                     yield value;
                 }
                 let next = collection.next();

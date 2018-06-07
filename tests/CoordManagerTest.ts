@@ -133,20 +133,28 @@ describe('CoordManager', () => {
 
             // test cell dim change
             let newCellSize = { width: 20, height: 20 };
-            let newOffset = makeCellOffset(newCellSize, Gravity.NorthWest);
+            let newOffset = makeCellOffset(newCellSize, Gravity.South);
             coordManager.updateWithState({ cellSize: newCellSize, cellOffset: newOffset });
 
             // test new bounds
             let toCellCoord = coordManager.toCellCoord;
-            expect(toCellCoord(v_world(0, 0))).to.deep.equal(v_cell(0, 0));
-            expect(toCellCoord(v_world(20, 20))).to.deep.equal(v_cell(1, 1));
-            expect(toCellCoord(v_world(-1, -1))).to.deep.equal(v_cell(-1, -1));
-            expect(toCellCoord(v_world(0, 20))).to.deep.equal(v_cell(0, 1));
-            expect(toCellCoord(v_world(20, 0))).to.deep.equal(v_cell(1, 0));
+            expect(toCellCoord(v_world(0, 0))).to.deep.equal(v_cell(0, 1));
+            expect(toCellCoord(v_world(-10, -20))).to.deep.equal(v_cell(0, 0));
+            expect(toCellCoord(v_world(-11, -21))).to.deep.equal(v_cell(-1, -1));
+            expect(toCellCoord(v_world(10, -1))).to.deep.equal(v_cell(1, 0));
+            expect(toCellCoord(v_world(10, 0))).to.deep.equal(v_cell(1, 1));
+            expect(toCellCoord(v_world(10, 1))).to.deep.equal(v_cell(1, 1));
+            expect(toCellCoord(v_world(10, 20))).to.deep.equal(v_cell(1, 2));
+            expect(toCellCoord(v_world(-10, -1))).to.deep.equal(v_cell(0, 0));
+            expect(toCellCoord(v_world(-10, 0))).to.deep.equal(v_cell(0, 1));
+            expect(toCellCoord(v_world(-10, 1))).to.deep.equal(v_cell(0, 1));
+            expect(toCellCoord(v_world(-10, 20))).to.deep.equal(v_cell(0, 2));
 
             let toWorldPosition = coordManager.toWorldPosition;
-            expect(toWorldPosition(v_cell(0, 0))).to.deep.equal(v_world(0, 0));
-            expect(toWorldPosition(v_cell(-1, -1))).to.deep.equal(v_world(-20, -20));
+            // expect to resolve to the top left of the cell no matter what (for rendering)
+            expect(toWorldPosition(v_cell(0, 0))).to.deep.equal(v_world(-10, -20));
+            expect(toWorldPosition(v_cell(1, 1))).to.deep.equal(v_world(10, 0));
+            expect(toWorldPosition(v_cell(-1, -1))).to.deep.equal(v_world(-30, -40));
         }); 
     });
 });

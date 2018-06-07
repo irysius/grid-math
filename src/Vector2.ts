@@ -37,7 +37,7 @@ export function isVector2(v: any, typeToCheck?: string|any): v is IVector2 {
         (v.type == null || typeof v.type === 'string') &&
         (typeof typeToCheck !== 'string' || v.type === typeToCheck);
 }
-export function add<T extends IVector2>(a: T, b: T): T {
+export function add<T extends IVector2, U extends IVector2 = T>(a: T, b: U): T {
     let type = checkType(a, b);
     let result: any = {
         x: a.x + b.x,
@@ -46,7 +46,7 @@ export function add<T extends IVector2>(a: T, b: T): T {
     if (type != null) { result.type = type; }
     return result;
 }
-export function subtract<T extends IVector2>(a: T, b: T): T {
+export function subtract<T extends IVector2, U extends IVector2 = T>(a: T, b: U): T {
     let type = checkType(a, b);
     let result: any = {
         x: a.x - b.x,

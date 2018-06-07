@@ -11,7 +11,7 @@ let {
     take
 } = math.helpers.Iterable;
 
-describe.only('pathfinding/tools', () => {
+describe('pathfinding/tools', () => {
     it('should be able to create square steps', () => {
         // clockwise, going down first
         let steps = simpleSquare(c(1, 1));
