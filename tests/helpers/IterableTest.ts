@@ -1,12 +1,5 @@
 import { expect } from 'chai';
-import * as math from '@irysius/grid-math';
-import { ISlidingWindow } from '@irysius/grid-math/helpers/Iterable';
-let {
-    isIterator, fromArray,
-    map, filter, flatten, zip, flow,
-    skip, take, skipTake,
-    SlidingWindow
-} = math.helpers.Iterable;
+import { ISlidingWindow, SlidingWindow, map, take, isIterator, skip, skipTake, fromArray, filter, flatten, zip, flow } from '@irysius/grid-math/helpers/Iterable';
 
 function* empty() {
 

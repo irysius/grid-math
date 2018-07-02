@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { Size } from '@irysius/grid-math';
+import * as Size from '@irysius/grid-math/Size';
 
 describe('Size', () => {
     it('should be able to create sizes', () => {
-        let create = Size.create
+        let create = Size.create;
         expect(create(10, 10)).to.deep.equal({ width: 10, height: 10 });
         expect(create(-10, -10)).to.deep.equal({ width: -10, height: -10 });
     });

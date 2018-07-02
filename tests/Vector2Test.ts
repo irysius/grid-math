@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Vector2 } from '@irysius/grid-math';
-let v = Vector2.create;
+import * as Vector2 from '@irysius/grid-math/Vector2';
+import { create as v } from '@irysius/grid-math/Vector2';
 
 describe('Vector2', () => {
     let testVectors = [

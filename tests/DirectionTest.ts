@@ -1,8 +1,5 @@
 import { expect } from 'chai';
-import { Direction as _d } from '@irysius/grid-math';
-let {
-    Direction, hasDirection, directionToString
-} = _d;
+import Direction, { hasDirection, directionToString } from '@irysius/grid-math/Direction';
 
 describe('Direction', () => {
     it('should be able to determine if a provided Direction has the specified Directions', () => {

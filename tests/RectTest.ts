@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Rect } from '@irysius/grid-math';
-let r = Rect.create;
+import { create as r } from '@irysius/grid-math/Rect';
+import * as Rect from '@irysius/grid-math/Rect';
 
 describe('Rect', () => {
     it('should be able to create rects', () => {

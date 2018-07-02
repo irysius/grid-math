@@ -1,12 +1,5 @@
 import { expect } from 'chai';
-import { Gravity as _g } from '@irysius/grid-math';
-let {
-    northOrSouth,
-    eastOrWest,
-    hasGravity,
-    gravityToString,
-    Gravity
-} = _g;
+import Gravity, { hasGravity, gravityToString, northOrSouth, eastOrWest } from '@irysius/grid-math/Gravity';
 
 describe('Gravity', () => {
     it('should be able to determine if a provided Gravity has the specified Gravities', () => {

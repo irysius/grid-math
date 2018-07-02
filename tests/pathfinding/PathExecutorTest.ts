@@ -1,19 +1,14 @@
 import { expect } from 'chai';
-import * as math from '@irysius/grid-math';
-import { ICoordManager } from '@irysius/grid-math/CoordManager';
+import { ICoordManager, CoordManager } from '@irysius/grid-math/CoordManager';
 import { ICellCoord } from '@irysius/grid-math/CellCoord';
-import { ICellOffset } from '@irysius/grid-math/Cell';
-import { exec } from 'child_process';
-let { Gravity } = math.Gravity;
-let { cellOffset: makeCellOffset } = math.Cell;
-let { add } = math.Vector2;
-let { create: v_cell } = math.CellCoord;
-let { create: v_world } = math.WorldPosition;
-let { create: r_screen } = math.ScreenRect
-let { CoordManager } = math.CoordManager;
-let { simpleSquare, createPath } = math.pathfinding.tools;
-let { PathExecutor } = math.pathfinding.PathExecutor;
-let { map } = math.helpers.Iterable;
+import { ICellOffset, cellOffset as makeCellOffset } from '@irysius/grid-math/Cell';
+import Gravity from '@irysius/grid-math/Gravity';
+import { PathExecutor } from '@irysius/grid-math/pathfinding/PathExecutor';
+import { create as v_cell } from '@irysius/grid-math/CellCoord';
+import { create as v_world } from '@irysius/grid-math/WorldPosition';
+import { create as r_screen } from '@irysius/grid-math/ScreenRect';
+import { simpleSquare, createPath } from '@irysius/grid-math/pathfinding/tools';
+import { map } from '@irysius/grid-math/helpers/Iterable';
 
 describe('pathfinding/PathExecutor', () => {
     let coordManager: ICoordManager;

@@ -1,9 +1,7 @@
 import { expect } from 'chai';
-import { Cell, Vector2, Gravity as _g } from '@irysius/grid-math';
-
-let v = Vector2.create;
-let { cellOffset } = Cell;
-let { Gravity } = _g;
+import Gravity from '@irysius/grid-math/Gravity';
+import { create as v } from '@irysius/grid-math/Vector2';
+import { cellOffset } from '@irysius/grid-math/Cell';
 
 describe('Cell', () => {
     it('should be able to generate a cell offset', () => {

@@ -1,15 +1,18 @@
 import { expect } from 'chai';
-import * as math from '@irysius/grid-math';
-let {
-    create: c
-} = math.CellCoord;
-let {
-    simpleSquare,
-    createPath
-} = math.pathfinding.tools;
-let {
-    take
-} = math.helpers.Iterable;
+import { simpleSquare, createPath } from '@irysius/grid-math/pathfinding/tools';
+import { create as c } from '@irysius/grid-math/CellCoord';
+import { take } from '@irysius/grid-math/helpers/Iterable';
+
+// let {
+//     create: c
+// } = math.CellCoord;
+// let {
+//     simpleSquare,
+//     createPath
+// } = math.pathfinding.tools;
+// let {
+//     take
+// } = math.helpers.Iterable;
 
 describe('pathfinding/tools', () => {
     it('should be able to create square steps', () => {

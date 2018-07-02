@@ -1,22 +1,13 @@
 import { expect } from 'chai';
-import { 
-    Cell,
-    CoordManager as _cm, 
-    Gravity as _g,
-    Vector2, WorldPosition, CellCoord, ScreenPosition,
-    Rect, ScreenRect 
-} from '@irysius/grid-math';
-import { ICoordManager } from '@irysius/grid-math/CoordManager';
-let { CoordManager } = _cm;
-let { Gravity } = _g;
-let { cellOffset: makeCellOffset } = Cell;
-
-let v = Vector2.create;
-let v_world = WorldPosition.create;
-let v_cell = CellCoord.create;
-let v_screen = ScreenPosition.create;
-let r = Rect.create;
-let r_screen = ScreenRect.create
+import { ICoordManager, CoordManager } from '@irysius/grid-math/CoordManager';
+import { create as v } from '@irysius/grid-math/Vector2';
+import { create as v_screen } from '@irysius/grid-math/ScreenPosition';
+import { create as v_world } from '@irysius/grid-math/WorldPosition';
+import { create as v_cell } from '@irysius/grid-math/CellCoord';
+import { create as r } from '@irysius/grid-math/Rect';
+import { create as r_screen } from '@irysius/grid-math/ScreenRect';
+import Gravity from '@irysius/grid-math/Gravity';
+import { cellOffset as makeCellOffset } from '@irysius/grid-math/Cell';
 
 describe('CoordManager', () => {
     it('should only initialize with valid state', () => {
