@@ -1,6 +1,6 @@
 {
   "name": "@irysius/grid-math",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Tools to assist with grid math and algorithms",
   "main": "build/index.js",
   "scripts": {
