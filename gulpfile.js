@@ -54,17 +54,11 @@ gulp.task('declaration-clean', () => {
 gulp.task('declaration-clean-amd', () => {
     return gulp.src(['tests/project.d.ts']).pipe(clean());
 });
-gulp.task('declaration-clean-commonjs', () => {
-    return gulp.src(['commonjs/**/*.d.ts']).pipe(clean());
-});
-gulp.task('declaration-move', () => {
-    return gulp.src(['commonjs/**/*.*']).pipe(gulp.dest('./'));
-});
 gulp.task('declaration-local', (done) => {
-    sequence('declaration', 'declaration-copy', 'declaration-amd', 'declaration-clean', 'declaration-clean-commonjs', done);
+    sequence('declaration', 'declaration-copy', 'declaration-amd', 'declaration-clean', done);
 });
 gulp.task('declaration-publish', (done) => {
-    sequence('declaration', 'declaration-copy', 'declaration-commonjs', 'declaration-clean', 'declaration-move', 'declaration-clean-commonjs', 'declaration-clean-amd', done);
+    sequence('declaration', 'declaration-copy', 'declaration-commonjs', 'declaration-clean', 'declaration-clean-amd', done);
 });
 
 // Tests
@@ -114,8 +108,12 @@ gulp.task('_publish', (done) => {
     });
 });
 
-gulp.task('default', ['build', 'declaration-local']);
-gulp.task('prepare', ['build', 'declaration-publish']);
+gulp.task('default', (done) => {
+    sequence('build', 'declaration-local', done);
+});
+gulp.task('prepare', (done) => {
+    sequence('build', 'declaration-publish', done);
+});
 gulp.task('pack', (done) => {
     sequence('prepublish', '_pack', done);
 });
