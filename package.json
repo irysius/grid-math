@@ -1,11 +1,10 @@
 {
   "name": "@irysius/grid-math",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tools to assist with grid math and algorithms",
   "main": "build/index.js",
   "scripts": {
-    "test": "mocha tests --recursive",
-    "prepare": "gulp prepare"
+    "test": "mocha tests --recursive"
   },
   "repository": {
     "type": "git",
@@ -28,7 +27,8 @@
   },
   "files": [
     "README.md",
+    "LICENSE.md",
     "**/*.d.ts",
-    "build/**/*.js"
+    "**/*.js"
   ]
 }
