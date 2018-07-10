@@ -1,32 +1,50 @@
 import * as Vector2 from "./Vector2";
-import { IVector2, isVector2 } from "./Vector2";
+import { IVector2, isVector2, create as v } from "./Vector2";
 import * as ScreenPosition from "./ScreenPosition";
 import { IScreenPosition } from "./ScreenPosition";
 import * as WorldPosition from "./WorldPosition";
-import { IWorldPosition } from "./WorldPosition";
+import { IWorldPosition, create as v_world } from "./WorldPosition";
 import * as CellCoord from "./CellCoord";
 import { ICellCoord } from "./CellCoord";
-import * as GridPosition from "./GridPosition";
 import { IGridPosition } from "./GridPosition";
 import { IRect, isRect } from "./Rect";
-import { IScreenRect } from "./ScreenRect";
+import { IScreenRect, create as r_screen } from "./ScreenRect";
 import * as ScreenRect from "./ScreenRect";
-import { IWorldRect } from "./WorldRect";
 import { ICellOffset } from "./Cell";
-import { ISize, isSize } from "./Size";
+import { ISize, isSize, create as s } from "./Size";
 
+export type IOptions = IClientState|IServerState;
 export interface IState {
-    cellSize: ISize;
-    cellOffset: ICellOffset;
     gridBounds: IScreenRect;
     position: IWorldPosition;
+    cellSize: ISize;
+    cellOffset: ICellOffset;
+}
+/**
+ * State for the CoordManager, on the client side. Clients should receive cellSize and cellOffset from the server.
+ */
+export interface IClientState {
+    gridBounds: IScreenRect;
+    position: IWorldPosition;
+}
+interface IClientStateInner extends IClientState {
+    cellSize?: ISize;
+    cellOffset?: ICellOffset;
+}
+/**
+ * State for the CoordManager, on the server side. Servers do not care about grid bounds or camera position.
+ */
+export interface IServerState {
+    cellSize: ISize;
+    cellOffset: ICellOffset;
+}
+interface IServerStateInner extends IServerState {
+    gridBounds?: IScreenRect;
+    position?: IWorldPosition;
 }
 interface ICache {
     gridBounds?: ICacheRect;
     worldTopLeft?: IWorldPosition;
-}
-export interface IOptions {
-    state: IState;
 }
 interface ICacheRect {
     width: number; height: number;
@@ -34,6 +52,7 @@ interface ICacheRect {
 }
 
 export interface ICoordManager {
+    getState(): IState;
     updateWithState(newState: Partial<IState>): void;
     toWorldPosition(v: IVector2): IWorldPosition;
     toScreenPosition(v: IVector2): IScreenPosition;
@@ -41,23 +60,44 @@ export interface ICoordManager {
     getWorldTopLeft(): IWorldPosition;
 }
 
-function isState(value: any): value is IState {
+function isClientState(value: any): value is IClientState {
     return (value &&
-        isSize(value.cellSize) &&
-        isVector2(value.cellOffset) &&
         isRect(value.gridBounds, ScreenRect.TYPE) &&
         isVector2(value.position, WorldPosition.TYPE));
 }
+function isServerState(value: any): value is IServerState {
+    return (value &&
+        isSize(value.cellSize) &&
+        isVector2(value.cellOffset));
+}
+function fillClientState(state: IClientStateInner): IState {
+    return {
+        gridBounds: state.gridBounds,
+        position: state.position,
+        cellOffset: isVector2(state.cellOffset) ? state.cellOffset : v(0, 0),
+        cellSize: isSize(state.cellSize) ? state.cellSize : s(0, 0) 
+    };
+}
+function fillServerState(state: IServerStateInner): IState {
+    return {
+        gridBounds: isRect(state.gridBounds) ? state.gridBounds : r_screen(0, 0, 0, 0),
+        position: isVector2(state.position, WorldPosition.TYPE) ? state.position : v_world(0, 0),
+        cellOffset: state.cellOffset,
+        cellSize: state.cellSize 
+    };
+}
 
 export function CoordManager(options: IOptions): ICoordManager {
-    let {
-        state
-    } = options;
-    let cache: ICache = {};
-
-    if (!isState(state)) {
+    let state: IState;
+    if (isClientState(options)) {
+        state = fillClientState(options);
+    } else if (isServerState(options)) {
+        state = fillServerState(options);
+    } else {
         throw new Error('CoordManager initialized with invalid state.');
     }
+    
+    let cache: ICache = {};
 
     function getGridBounds(): ICacheRect {
         if (!cache.gridBounds) {
@@ -84,6 +124,11 @@ export function CoordManager(options: IOptions): ICoordManager {
         return cache.worldTopLeft;
     }
 
+    function getState(): IState {
+        return {
+            ...state
+        };
+    }
     function updateWithState(newState: Partial<IState>) {
         state = {
             ...state,
@@ -192,6 +237,7 @@ export function CoordManager(options: IOptions): ICoordManager {
     
     return {
         updateWithState,
+        getState,
         toWorldPosition,
         toScreenPosition,
         toCellCoord,

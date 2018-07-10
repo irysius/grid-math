@@ -21,25 +21,34 @@ describe('CoordManager', () => {
         
         let badStates = [
             { cellSize: null, cellOffset: null, gridBounds: null, position: null },
-            { cellSize: null, cellOffset, gridBounds, position },
-            { cellSize, cellOffset: null, gridBounds, position },
-            { cellSize, cellOffset, gridBounds: null, position },
-            { cellSize, cellOffset, gridBounds, position: null }
+            { cellSize: null, cellOffset: null, gridBounds: null, position },
+            { cellSize: null, cellOffset: null, gridBounds, position: null },
+            { cellSize: null, cellOffset, gridBounds: null, position: null },
+            { cellSize, cellOffset: null, gridBounds: null, position: null }
         ];
         let thunks2 = badStates.map(badState => {
-            return () => CoordManager({ state: badState });
+            return () => CoordManager(badState);
         });
         thunks2.forEach(thunk => {
             expect(thunk).to.throw();
         });
 
-        let notGoodEnoughState: any = {
-            cellSize, cellOffset, gridBounds: r(10, 10, 580, 380), position: v(100, 150)
-        };
-        let thunk3 = () => CoordManager({ state: notGoodEnoughState });
-        expect(thunk3).to.throw();
+        let goodEnoughStates = [
+            { cellSize, cellOffset, gridBounds: r(10, 10, 580, 380), position: v(100, 150) },
+            { cellSize: null, cellOffset, gridBounds, position },
+            { cellSize, cellOffset: null, gridBounds, position },
+            { cellSize, cellOffset, gridBounds: null, position },
+            { cellSize, cellOffset, gridBounds, position: null }
+        ];
+        goodEnoughStates.forEach(state => {
+            let cm = CoordManager(state);
+            expect(cm).to.be.an('object');
+            // test only one function
+            expect(cm.updateWithState).to.be.a('function');
+        });
         
-        let cm = CoordManager({ state: { cellSize, cellOffset, gridBounds, position }});
+        let cm = CoordManager({ cellSize, cellOffset, gridBounds, position });
+        
         expect(cm).to.be.an('object');
         // test only one function
         expect(cm.updateWithState).to.be.a('function');
@@ -55,7 +64,7 @@ describe('CoordManager', () => {
                 cellSize, cellOffset, gridBounds, position
             };
 
-            coordManager = CoordManager({ state });
+            coordManager = CoordManager(state);
         });
         afterEach(() => {
             coordManager = null

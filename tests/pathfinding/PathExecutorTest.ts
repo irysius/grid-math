@@ -22,7 +22,7 @@ describe('pathfinding/PathExecutor', () => {
             cellSize, cellOffset, gridBounds, position
         };
 
-        coordManager = CoordManager({ state });
+        coordManager = CoordManager(state);
     });
     afterEach(() => {
         coordManager = null;
